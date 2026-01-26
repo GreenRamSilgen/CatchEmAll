@@ -24,23 +24,29 @@ struct DetailView: View {
                 .padding(.bottom)
             
             HStack {
-                AsyncImage(url: URL(string: creatureDetail.imageUrl)) { task in
-                    if let image = task.image {
+                AsyncImage(url: URL(string: creatureDetail.imageUrl)) { phase in
+                    if let image = phase.image {
                         image
                             .resizable()
                             .scaledToFit()
                             .background(.white)
-                            .frame(width: 96, height: 96)
                             .clipShape(RoundedRectangle(cornerRadius: 16))
                             .shadow(radius: 8, x: 5, y: 5)
                             .overlay(content: {
                                 RoundedRectangle(cornerRadius: 16).stroke(.gray.opacity(0.5), lineWidth: 1)
                             })
                             .padding(.trailing)
+                    } else if phase.error != nil {
+                    }
+                    else {
+                        ProgressView()
+                            .progressViewStyle(.circular)
+                            .scaleEffect(2)
                     }
                 }
+                .frame(width: 100, height: 100)
                 
-                VStack{
+                VStack(alignment: .leading) {
                     HStack(alignment: .top) {
                         Text("Height:")
                             .font(.title2)
