@@ -11,7 +11,7 @@ import Foundation
 class Creatures {
     private struct Returned: Codable{
         var count : Int
-        var next : String
+        var next : String?
         var results : [Creature]
     }
     
@@ -27,10 +27,12 @@ class Creatures {
             let (pokemonData, _) = try await URLSession.shared.data(from: pokemonURL)
             
             let returned = try JSONDecoder().decode(Returned.self, from: pokemonData)
-            self.count = returned.count
-            self.urlString = returned.next
-            self.creaturesArray = returned.results
             
+            Task { @MainActor in
+                self.count = returned.count
+                self.urlString = returned.next ?? ""
+                self.creaturesArray = self.creaturesArray + returned.results
+            }
         }
         catch {
             print("Failed to call API. 😡Error:\n \(error)\n Error End😡")
