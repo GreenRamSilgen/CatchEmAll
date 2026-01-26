@@ -18,23 +18,25 @@ class Creatures {
     var urlString = "https://pokeapi.co/api/v2/pokemon/"
     var count = 0
     var creaturesArray : [Creature] = []
-    
+    var isLoading = false
     
     func getData() async {
         guard let pokemonURL = URL(string: urlString) else { return }
-        
+        isLoading = true
         do {
             let (pokemonData, _) = try await URLSession.shared.data(from: pokemonURL)
-            
             let returned = try JSONDecoder().decode(Returned.self, from: pokemonData)
+            isLoading = false
             
             Task { @MainActor in
                 self.count = returned.count
                 self.urlString = returned.next ?? ""
                 self.creaturesArray = self.creaturesArray + returned.results
+                isLoading = false
             }
         }
         catch {
+            isLoading = false
             print("Failed to call API. 😡Error:\n \(error)\n Error End😡")
         }
     }
