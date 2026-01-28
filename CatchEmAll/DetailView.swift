@@ -25,38 +25,7 @@ struct DetailView: View {
             
             
             HStack {
-                AsyncImage(url: URL(string: creatureDetail.imageUrl)) { phase in
-                    if let image = phase.image {
-                        image
-                            .resizable()
-                            .scaledToFit()
-                            .background(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
-                            .shadow(radius: 8, x: 5, y: 5)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(.gray.opacity(0.5), lineWidth: 1)
-                            }
-                    }
-                    else if phase.error != nil {
-                        Image(systemName: "questionmark.square.dashed")
-                            .resizable()
-                            .scaledToFit()
-                            .background(.white)
-                            .clipShape(RoundedRectangle(cornerRadius: 16))
-                            .shadow(radius: 8, x: 5, y: 5)
-                            .overlay {
-                                RoundedRectangle(cornerRadius: 16)
-                                    .stroke(.gray.opacity(0.5), lineWidth: 1)
-                            }
-                    }
-                    else {
-                        RoundedRectangle(cornerRadius: 10)
-                            .foregroundStyle(.clear)
-                    }
-                }
-                .frame (width: 96, height: 96)
-                .padding()
+                creatureImage
                 
                 VStack(alignment: .leading) {
                     HStack(alignment: .top) {
@@ -89,6 +58,49 @@ struct DetailView: View {
         }
     }
 }
+
+extension DetailView {
+    var creatureImage : some View {
+        AsyncImage(url: URL(string: creatureDetail.imageUrl)) { phase in
+            if let image = phase.image {
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .background(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .shadow(radius: 8, x: 5, y: 5)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(.gray.opacity(0.5), lineWidth: 1)
+                    }
+            }
+            else if phase.error != nil {
+                Image(systemName: "questionmark.square.dashed")
+                    .resizable()
+                    .scaledToFit()
+                    .background(.white)
+                    .clipShape(RoundedRectangle(cornerRadius: 16))
+                    .shadow(radius: 8, x: 5, y: 5)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(.gray.opacity(0.5), lineWidth: 1)
+                    }
+            }
+            else {
+                ProgressView()
+                    .tint(.red)
+                    .scaleEffect(4)
+                    .overlay {
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(.gray.opacity(0.5), lineWidth: 1)
+                    }
+            }
+        }
+        .frame (width: 96, height: 96)
+        .padding()
+    }
+}
+
 
 #Preview {
     DetailView(creature: Creature(name: "bulbasaur", url: "https://pokeapi.co/api/v2/pokemon/1/"))
