@@ -23,6 +23,7 @@ struct DetailView: View {
                 .foregroundStyle(.gray)
                 .padding(.bottom)
             
+            
             HStack {
                 AsyncImage(url: URL(string: creatureDetail.imageUrl)) { phase in
                     if let image = phase.image {
@@ -32,19 +33,30 @@ struct DetailView: View {
                             .background(.white)
                             .clipShape(RoundedRectangle(cornerRadius: 16))
                             .shadow(radius: 8, x: 5, y: 5)
-                            .overlay(content: {
-                                RoundedRectangle(cornerRadius: 16).stroke(.gray.opacity(0.5), lineWidth: 1)
-                            })
-                            .padding(.trailing)
-                    } else if phase.error != nil {
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(.gray.opacity(0.5), lineWidth: 1)
+                            }
+                    }
+                    else if phase.error != nil {
+                        Image(systemName: "questionmark.square.dashed")
+                            .resizable()
+                            .scaledToFit()
+                            .background(.white)
+                            .clipShape(RoundedRectangle(cornerRadius: 16))
+                            .shadow(radius: 8, x: 5, y: 5)
+                            .overlay {
+                                RoundedRectangle(cornerRadius: 16)
+                                    .stroke(.gray.opacity(0.5), lineWidth: 1)
+                            }
                     }
                     else {
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                            .scaleEffect(2)
+                        RoundedRectangle(cornerRadius: 10)
+                            .foregroundStyle(.clear)
                     }
                 }
-                .frame(width: 100, height: 100)
+                .frame (width: 96, height: 96)
+                .padding()
                 
                 VStack(alignment: .leading) {
                     HStack(alignment: .top) {

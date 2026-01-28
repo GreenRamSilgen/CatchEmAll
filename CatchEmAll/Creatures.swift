@@ -40,4 +40,14 @@ class Creatures {
             print("Failed to call API. 😡Error:\n \(error)\n Error End😡")
         }
     }
+    
+    func loadAll() async {
+        
+        Task { @MainActor in
+            guard urlString.hasPrefix("http") else { return }
+            
+            await getData()
+            await loadAll()
+        }
+    }
 }

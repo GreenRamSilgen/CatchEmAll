@@ -16,6 +16,17 @@ class CreatureDetail {
     }
     
     private struct Sprite: Codable {
+        var other : Other
+    }
+    
+    struct Other : Codable {
+        var  officialArtwork: OfficialArtwork
+        enum CodingKeys: String, CodingKey {
+            case officialArtwork = "official-artwork"
+        }
+    }
+    
+    struct OfficialArtwork: Codable {
         var front_default : String
     }
     
@@ -33,7 +44,7 @@ class CreatureDetail {
             
             self.height = returned.height
             self.weight = returned.weight
-            self.imageUrl = returned.sprites.front_default
+            self.imageUrl = returned.sprites.other.officialArtwork.front_default ?? "n/a"
         }
         catch {
             print("Failed to call API. 😡Error:\n \(error)\n Error End😡")
